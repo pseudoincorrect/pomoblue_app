@@ -23,6 +23,7 @@ flutter:
   assets:
     - assets/images/relax_time.jpg
     - assets/images/work_time.jpg
+    - assets/images/ready.jpg
 
   fonts:
     - family: ConcertOne

@@ -3,7 +3,7 @@ import 'package:rxdart/rxdart.dart';
 
 enum TimerEvent { start, pause, reset, timeOut }
 
-enum TimerState { running, paused, done }
+enum TimerState { reset, running, paused, done }
 
 class TimerBloc {
   final _timerEvents = PublishSubject<TimerEvent>();

@@ -13,8 +13,9 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: getAppBar('PomoBlue'),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        // mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
+          Container(height: 20),
           PomoTimer(),
           SlideSelect(),
           PictureWork(),

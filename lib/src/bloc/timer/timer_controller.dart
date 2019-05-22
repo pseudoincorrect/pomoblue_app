@@ -16,7 +16,7 @@ class TimerController {
     _bloc = timerBloc;
     _resetVal = defaultWorkTime;
     _counter = _resetVal;
-    _timerState = TimerState.done;
+    _timerState = TimerState.reset;
     _bloc.controlEvents.listen(onControlEvent);
     _bloc.controlEvents.listen(updateTimerFSM);
     _bloc.counterResetVal.listen(onResetValData);
@@ -29,7 +29,7 @@ class TimerController {
     if (_counter > 0) {
       _counter--;
     } else {
-      _timer.cancel();
+      cancerTimer();
       _bloc.updateControlEvent(TimerEvent.timeOut);
     }
   }
@@ -43,29 +43,39 @@ class TimerController {
       }
     }
     if (timerEvent == TimerEvent.pause) {
-      _timer.cancel();
+      _bloc.updateCounterVal(_counter);
+      cancerTimer();
     }
     if (timerEvent == TimerEvent.reset) {
       _counter = _resetVal;
       _bloc.updateCounterVal(_counter);
-      if (_timer != null) _timer.cancel();
+      cancerTimer();
     }
   }
 
   void onResetValData(int newVal) {
-    print("newVal");
     _resetVal = newVal;
-    if (_timerState == TimerState.done) {
+    if (_timerState == TimerState.done || _timerState == TimerState.reset) {
       _counter = newVal;
       _bloc.updateCounterVal(_counter);
     }
   }
 
+  void cancerTimer() {
+    if (_timer != null) _timer.cancel();
+  }
+
   void updateTimerFSM(TimerEvent timerEvent) {
     if (timerEvent == TimerEvent.reset) {
-      _timerState = TimerState.done;
+      _timerState = TimerState.reset;
     } else {
       switch (_timerState) {
+        case TimerState.reset:
+          if (timerEvent == TimerEvent.start) {
+            _timerState = TimerState.running;
+          }
+          break;
+
         case TimerState.running:
           if (timerEvent == TimerEvent.timeOut)
             _timerState = TimerState.done;
@@ -89,6 +99,6 @@ class TimerController {
           break;
       }
     }
-    TimerBloc.printState(_timerState);
+    _bloc.updateCurrentState(_timerState);
   }
 }

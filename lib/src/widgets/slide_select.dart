@@ -18,10 +18,22 @@ class _SlideSelectState extends State<SlideSelect> {
     return StreamBuilder<TimerState>(
       stream: timerBloc.currentState,
       builder: (BuildContext context, AsyncSnapshot<TimerState> snapshot) {
-        if (snapshot.data == TimerState.done) {
-          return sliderWidget();
+        if (!snapshot.hasData) {
+          return Container(
+            child: sliderWidget(),
+            height: 50,
+          );
+        } else if (snapshot.data == TimerState.reset ||
+            snapshot.data == TimerState.done) {
+          return Container(
+            child: sliderWidget(),
+            height: 50,
+          );
         } else {
-          return Container();
+          return Container(
+            height: 50,
+            child: Center(child: Text("Focus Time")),
+          );
         }
       },
     );

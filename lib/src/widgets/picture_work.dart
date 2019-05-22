@@ -23,16 +23,26 @@ class _PictureWorkState extends State<PictureWork> {
       ) {
         String photo;
         if (!snapshot.hasData) {
-          photo = 'assets/images/relax_time.jpg';
-        } else if (snapshot.data == TimerState.running) {
+          photo = 'assets/images/ready.jpg';
+        } else if (snapshot.data == TimerState.running ||
+            snapshot.data == TimerState.paused) {
           photo = 'assets/images/work_time.jpg';
-        } else {
+        } else if (snapshot.data == TimerState.done) {
           photo = 'assets/images/relax_time.jpg';
+        } else if (snapshot.data == TimerState.reset) {
+          photo = 'assets/images/ready.jpg';
         }
+
         return Container(
           margin: EdgeInsets.only(left: 15.0, right: 15.0),
           child: Card(
-            child: Image.asset(photo),
+            elevation: 5.0,
+            child: ClipRRect(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(4.0),
+              ),
+              child: Image.asset(photo),
+            ),
           ),
         );
       },
