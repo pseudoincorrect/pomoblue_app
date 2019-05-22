@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:pomoblue/src/bloc/timer/timer_controller.dart';
 import './timer_bloc.dart';
 export './timer_bloc.dart';
 
 class TimerBlocProvider extends InheritedWidget {
   final TimerBloc bloc;
+  final TimerController timerController;
 
   TimerBlocProvider({Key key, Widget child})
       : bloc = TimerBloc(),
-        super(key: key, child: child);
+        timerController = TimerController(),
+        super(key: key, child: child) {
+    timerController.setup(bloc);
+  }
 
   bool updateShouldNotify(_) => true;
 

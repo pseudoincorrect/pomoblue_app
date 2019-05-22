@@ -20,7 +20,17 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  assets:
+    - assets/images/relax_time.jpg
+    - assets/images/work_time.jpg
+
   fonts:
     - family: ConcertOne
       fonts:
         - asset: assets/fonts/ConcertOne-Regular.ttf
+    - family: 8BitsWonder
+      fonts:
+        - asset: assets/fonts/8BitsWonder.ttf
+    - family: Mozart
+      fonts:
+        - asset: assets/fonts/Mozart.ttf
