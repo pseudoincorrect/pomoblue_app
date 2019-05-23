@@ -1,4 +1,4 @@
-package com.example.pomoblue;
+package com.example.pomoblue_app;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

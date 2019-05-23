@@ -1,97 +1,99 @@
 import 'dart:async';
-
 import 'package:pomoblue/src/bloc/timer/timer_bloc.dart';
 
 const Duration period = Duration(milliseconds: 100);
-const int defaultWorkTime = 25 * 60; // seconds
 
 class TimerController {
-  TimerBloc _bloc;
-  Timer _timer;
-  TimerState _timerState;
-  int _counter;
-  int _resetVal;
+  TimerBloc bloc;
+  Timer timer;
+  TimerState timerState;
+  int counter;
+  int resetVal;
+  static const int defaultWorkTime = 25 * 60; // seconds
 
-  void setup(TimerBloc timerBloc) {
-    _bloc = timerBloc;
-    _resetVal = defaultWorkTime;
-    _counter = _resetVal;
-    _timerState = TimerState.reset;
-    _bloc.controlEvents.listen(onControlEvent);
-    _bloc.controlEvents.listen(updateTimerFSM);
-    _bloc.counterResetVal.listen(onResetValData);
-    _bloc.updateCounterVal(_counter);
-    _bloc.updateCurrentState(_timerState);
+  void setup(TimerBloc timerBloc, {int defaultTime = defaultWorkTime}) {
+    // Attributes
+    bloc = timerBloc;
+    resetVal = defaultTime;
+    counter = resetVal;
+    timerState = TimerState.reset;
+    // Inputs
+    bloc.controlEvents.listen(onControlEvent);
+    bloc.controlEvents.listen(updateTimerFSM);
+    bloc.counterResetVal.listen(onResetValData);
+    // Outputs
+    bloc.updateCounterVal(counter);
+    bloc.updateCurrentState(timerState);
   }
 
   void onPeriodicEvent(Timer timer) {
-    _bloc.updateCounterVal(_counter);
-    if (_counter > 0) {
-      _counter--;
+    if (counter > 0) {
+      counter--;
     } else {
-      cancerTimer();
-      _bloc.updateControlEvent(TimerEvent.timeOut);
+      cancelTimer();
+      bloc.updateControlEvent(TimerEvent.timeOut);
     }
+    bloc.updateCounterVal(counter);
   }
 
   void onControlEvent(TimerEvent timerEvent) {
     if (timerEvent == TimerEvent.start) {
-      if (_timer == null) {
-        _timer = Timer.periodic(period, onPeriodicEvent);
-      } else if (!_timer.isActive) {
-        _timer = Timer.periodic(period, onPeriodicEvent);
+      if (timer == null) {
+        timer = Timer.periodic(period, onPeriodicEvent);
+      } else if (!timer.isActive) {
+        timer = Timer.periodic(period, onPeriodicEvent);
       }
     }
     if (timerEvent == TimerEvent.pause) {
-      _bloc.updateCounterVal(_counter);
-      cancerTimer();
+      bloc.updateCounterVal(counter);
+      cancelTimer();
     }
     if (timerEvent == TimerEvent.reset) {
-      _counter = _resetVal;
-      _bloc.updateCounterVal(_counter);
-      cancerTimer();
+      counter = resetVal;
+      bloc.updateCounterVal(counter);
+      cancelTimer();
     }
   }
 
   void onResetValData(int newVal) {
-    _resetVal = newVal;
-    if (_timerState == TimerState.done || _timerState == TimerState.reset) {
-      _counter = newVal;
-      _bloc.updateCounterVal(_counter);
+    resetVal = newVal;
+    if (timerState == TimerState.done || timerState == TimerState.reset) {
+      counter = newVal;
+      bloc.updateCounterVal(counter);
     }
   }
 
-  void cancerTimer() {
-    if (_timer != null) _timer.cancel();
+  void cancelTimer() {
+    if (timer != null) timer.cancel();
   }
 
   void updateTimerFSM(TimerEvent timerEvent) {
     if (timerEvent == TimerEvent.reset) {
-      _timerState = TimerState.reset;
+      timerState = TimerState.reset;
     } else {
-      switch (_timerState) {
+      switch (timerState) {
         case TimerState.reset:
           if (timerEvent == TimerEvent.start) {
-            _timerState = TimerState.running;
+            timerState = TimerState.running;
           }
           break;
 
         case TimerState.running:
           if (timerEvent == TimerEvent.timeOut)
-            _timerState = TimerState.done;
+            timerState = TimerState.done;
           else if (timerEvent == TimerEvent.pause)
-            _timerState = TimerState.paused;
+            timerState = TimerState.paused;
           break;
 
         case TimerState.paused:
           if (timerEvent == TimerEvent.start) {
-            _timerState = TimerState.running;
+            timerState = TimerState.running;
           }
           break;
 
         case TimerState.done:
           if (timerEvent == TimerEvent.start) {
-            _timerState = TimerState.running;
+            timerState = TimerState.running;
           }
           break;
 
@@ -99,6 +101,6 @@ class TimerController {
           break;
       }
     }
-    _bloc.updateCurrentState(_timerState);
+    bloc.updateCurrentState(timerState);
   }
 }
