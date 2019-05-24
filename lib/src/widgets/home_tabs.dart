@@ -12,10 +12,21 @@ class HomeTabs extends StatelessWidget {
         appBar: AppBar(
           title: Text('PomoBlue'),
           bottom: TabBar(
+            indicator: UnderlineTabIndicator(
+                borderSide: BorderSide(width: 4, color: Colors.white)),
             tabs: [
-              Tab(icon: Icon(Icons.rowing)),
-              Tab(icon: Icon(Icons.airline_seat_legroom_extra)),
-              Tab(icon: Icon(Icons.airline_seat_flat_angled)),
+              Tab(
+                child: tabTitle('Pomodoro'),
+                icon: Icon(Icons.rowing),
+              ),
+              Tab(
+                child: tabTitle('Short Break'),
+                icon: Icon(Icons.airline_seat_legroom_extra),
+              ),
+              Tab(
+                child: tabTitle('Long Break'),
+                icon: Icon(Icons.airline_seat_flat_angled),
+              ),
             ],
           ),
         ),
@@ -27,6 +38,13 @@ class HomeTabs extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget tabTitle(String textTab) {
+    return Text(
+      textTab,
+      style: TextStyle(fontSize: 10),
     );
   }
 }

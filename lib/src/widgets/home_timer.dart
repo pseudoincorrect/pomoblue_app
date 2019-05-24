@@ -33,7 +33,7 @@ class HomeTimer extends StatelessWidget {
               running: imagesAssets.running,
             ),
           ),
-          DeviceInfo(),
+          // DeviceInfo(),
           // Container(height: 20),
         ],
       ),

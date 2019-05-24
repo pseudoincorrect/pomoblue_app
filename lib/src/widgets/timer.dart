@@ -18,16 +18,14 @@ class _PomoTimerState extends State<PomoTimer> {
     return Container(
       margin: EdgeInsets.only(left: 15.0, right: 15.0),
       height: 120,
-      child: Card(
-        child: Container(
-          margin: EdgeInsets.only(left: 15.0, right: 15.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              timerView(),
-              controls(),
-            ],
-          ),
+      child: Container(
+        margin: EdgeInsets.only(left: 15.0, right: 15.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            timerView(),
+            controls(),
+          ],
         ),
       ),
     );
