@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './screens/home.dart';
+import './widgets/home_tabs.dart';
 import './bloc/timer/timer_provider.dart';
 
 class App extends StatelessWidget {
@@ -9,9 +9,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return TimerBlocProvider(
       child: MaterialApp(
-        title: 'Welcome to Flutter',
+        title: 'PomoBlue',
         theme: getTheme(),
-        home: HomePage(),
+        home: HomeTabs(),
       ),
     );
   }

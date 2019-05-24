@@ -22,9 +22,14 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/relax_time.jpg
     - assets/images/work_time.jpg
-    - assets/images/ready.jpg
+    - assets/images/relax_time.jpg
+    - assets/images/work_ready.jpg
+    - assets/images/work_done.jpg
+    - assets/images/chair_ready.jpg
+    - assets/images/chair_done.jpg
+    - assets/images/travel_ready.jpg
+    - assets/images/travel_done.jpg
 
   fonts:
     - family: ConcertOne

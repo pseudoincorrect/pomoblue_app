@@ -3,8 +3,11 @@ import 'package:pomoblue/src/bloc/timer/timer_bloc.dart';
 import 'package:pomoblue/src/bloc/timer/timer_provider.dart';
 
 class SlideSelect extends StatefulWidget {
-  SlideSelect({Key key}) : super(key: key);
+  final String hideText;
 
+  SlideSelect({Key key, this.hideText}) : super(key: key);
+
+  @override
   _SlideSelectState createState() => _SlideSelectState();
 }
 
@@ -23,8 +26,7 @@ class _SlideSelectState extends State<SlideSelect> {
             child: sliderWidget(),
             height: 50,
           );
-        } else if (snapshot.data == TimerState.reset ||
-            snapshot.data == TimerState.done) {
+        } else if (snapshot.data == TimerState.reset) {
           return Container(
             child: sliderWidget(),
             height: 50,
@@ -32,7 +34,7 @@ class _SlideSelectState extends State<SlideSelect> {
         } else {
           return Container(
             height: 50,
-            child: Center(child: Text("Focus Time")),
+            child: Center(child: Text(widget.hideText)),
           );
         }
       },

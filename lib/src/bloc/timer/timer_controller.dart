@@ -38,6 +38,7 @@ class TimerController {
 
   void onControlEvent(TimerEvent timerEvent) {
     if (timerEvent == TimerEvent.start) {
+      if (timerState == TimerState.done) return;
       if (timer == null) {
         timer = Timer.periodic(period, onPeriodicEvent);
       } else if (!timer.isActive) {
@@ -92,9 +93,6 @@ class TimerController {
           break;
 
         case TimerState.done:
-          if (timerEvent == TimerEvent.start) {
-            timerState = TimerState.running;
-          }
           break;
 
         default:

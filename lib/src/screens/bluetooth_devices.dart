@@ -7,7 +7,7 @@ class BluetoothDevicesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar('Select your Device'),
+      appBar: getAppBar('Select Device', 20),
       body: Center(
         child: ListView(
           children: <Widget>[

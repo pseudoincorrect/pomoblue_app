@@ -2,18 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:pomoblue/src/bloc/timer/timer_bloc.dart';
 import '../bloc/timer/timer_provider.dart';
 
-class PictureWork extends StatefulWidget {
-  PictureWork({Key key}) : super(key: key);
+class ImagesAssets {
+  final String ready;
+  final String running;
+  final String done;
 
-  _PictureWorkState createState() => _PictureWorkState();
+  ImagesAssets({this.ready, this.running, this.done});
 }
 
-class _PictureWorkState extends State<PictureWork> {
+class ImagesSelect extends StatefulWidget {
+  final ImagesAssets images;
+  ImagesSelect({Key key, this.images}) : super(key: key);
+
+  _ImagesSelectState createState() => _ImagesSelectState();
+}
+
+class _ImagesSelectState extends State<ImagesSelect> {
   TimerBloc timerBloc;
 
   @override
   Widget build(BuildContext context) {
     timerBloc = TimerBlocProvider.of(context);
+
+    precacheImage(AssetImage(widget.images.ready), context);
+    precacheImage(AssetImage(widget.images.running), context);
+    precacheImage(AssetImage(widget.images.done), context);
 
     return StreamBuilder<TimerState>(
       stream: timerBloc.currentState,
@@ -23,17 +36,18 @@ class _PictureWorkState extends State<PictureWork> {
       ) {
         String photo;
         if (!snapshot.hasData) {
-          photo = 'assets/images/ready.jpg';
+          photo = widget.images.ready;
         } else if (snapshot.data == TimerState.running ||
             snapshot.data == TimerState.paused) {
-          photo = 'assets/images/work_time.jpg';
+          photo = widget.images.running;
         } else if (snapshot.data == TimerState.done) {
-          photo = 'assets/images/relax_time.jpg';
+          photo = widget.images.done;
         } else if (snapshot.data == TimerState.reset) {
-          photo = 'assets/images/ready.jpg';
+          photo = widget.images.ready;
         }
 
         return Container(
+          height: 250,
           margin: EdgeInsets.only(left: 15.0, right: 15.0),
           child: Card(
             elevation: 5.0,
