@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pomoblue/src/bloc/timer/timer_bloc.dart';
 import '../bloc/timer/timer_provider.dart';
+import '../widgets/image_container.dart';
 
 class ImagesAssets {
   final String ready;
@@ -46,19 +47,7 @@ class _ImagesSelectState extends State<ImagesSelect> {
           photo = widget.images.ready;
         }
 
-        return Container(
-          height: 250,
-          margin: EdgeInsets.only(left: 15.0, right: 15.0),
-          child: Card(
-            elevation: 5.0,
-            child: ClipRRect(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(4.0),
-              ),
-              child: Image.asset(photo),
-            ),
-          ),
-        );
+        return ImageContainer(imageAsset: photo);
       },
     );
   }

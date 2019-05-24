@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pomoblue/src/bloc/timer/timer_bloc.dart';
-import 'package:pomoblue/src/bloc/timer/timer_provider.dart';
+import '../bloc/timer/timer_provider.dart';
+import '../bloc/page_selector/active_page_provider.dart';
+import '../bloc/which_page/which_page_provider.dart';
 
 class PomoTimer extends StatefulWidget {
   PomoTimer({Key key}) : super(key: key);
@@ -9,11 +10,15 @@ class PomoTimer extends StatefulWidget {
 }
 
 class _PomoTimerState extends State<PomoTimer> {
-  TimerBloc bloc;
+  TimerBloc timerBloc;
+  ActivePageBloc activePageBloc;
+  WhichPageBloc whichPageBloc;
 
   @override
   Widget build(BuildContext context) {
-    bloc = TimerBlocProvider.of(context);
+    timerBloc = TimerBlocProvider.of(context);
+    activePageBloc = ActivePageProvider.of(context);
+    whichPageBloc = WhichPageProvider.of(context);
 
     return Container(
       margin: EdgeInsets.only(left: 15.0, right: 15.0),
@@ -36,7 +41,7 @@ class _PomoTimerState extends State<PomoTimer> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         controlButton(Icons.play_arrow, start),
-        controlButton(Icons.pause, stop),
+        controlButton(Icons.pause, pause),
         controlButton(Icons.fast_rewind, reset),
       ],
     );
@@ -50,21 +55,22 @@ class _PomoTimerState extends State<PomoTimer> {
   }
 
   void start() {
-    bloc.updateControlEvent(TimerEvent.start);
+    timerBloc.updateControlEvent(TimerEvent.start);
+    activePageBloc.updateactivePage(whichPageBloc.myPage);
   }
 
-  void stop() {
-    bloc.updateControlEvent(TimerEvent.pause);
+  void pause() {
+    timerBloc.updateControlEvent(TimerEvent.pause);
   }
 
   void reset() {
-    bloc.updateControlEvent(TimerEvent.reset);
+    timerBloc.updateControlEvent(TimerEvent.reset);
   }
 
   Widget timerView() {
     return Center(
       child: StreamBuilder<int>(
-        stream: bloc.counterVal, // a Stream<int> or null
+        stream: timerBloc.counterVal, // a Stream<int> or null
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
           if (snapshot.hasError) return Text('Error: ${snapshot.error}');
           int data = snapshot.data ?? 0;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomoblue/src/bloc/page_selector/active_page_provider.dart';
 import './widgets/home_tabs.dart';
 import './bloc/timer/timer_provider.dart';
 
@@ -7,11 +8,17 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TimerBlocProvider(
-      child: MaterialApp(
-        title: 'PomoBlue',
-        theme: getTheme(),
-        home: HomeTabs(),
+    final timerBloc = TimerBloc();
+    final activePageBloc = ActivePageBloc(timerBloc: timerBloc);
+    return ActivePageProvider(
+      bloc: activePageBloc,
+      child: TimerBlocProvider(
+        bloc: timerBloc,
+        child: MaterialApp(
+          title: 'PomoBlue',
+          theme: getTheme(),
+          home: HomeTabs(),
+        ),
       ),
     );
   }

@@ -7,9 +7,8 @@ class TimerBlocProvider extends InheritedWidget {
   final TimerBloc bloc;
   final TimerControllerInterface timerControllerInterface;
 
-  TimerBlocProvider({Key key, Widget child})
-      : bloc = TimerBloc(),
-        timerControllerInterface = TimerControllerInterface(),
+  TimerBlocProvider({Key key, Widget child, this.bloc})
+      : timerControllerInterface = TimerControllerInterface(),
         super(key: key, child: child) {
     timerControllerInterface.setup(bloc);
   }

@@ -19,7 +19,7 @@ class TimerBloc {
   }
 
   // TIMER STATE
-  Stream get currentState => _timerCurrentState.stream;
+  Observable<TimerState> get currentState => _timerCurrentState.stream;
 
   void updateCurrentState(TimerState state) {
     _timerCurrentState.add(state);
