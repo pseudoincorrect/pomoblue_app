@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../bloc/timer/timer_provider.dart';
-import '../bloc/page_selector/active_page_provider.dart';
-import '../bloc/which_page/which_page_provider.dart';
+import 'package:pomoblue/src/bloc/page_timers/page_timers_provider.dart';
+import 'package:pomoblue/src/bloc/page_timers/timer/timer_events.dart';
+import 'package:pomoblue/src/bloc/page_timers/which_page/which_page_provider.dart';
 
 class PomoTimer extends StatefulWidget {
   PomoTimer({Key key}) : super(key: key);
@@ -10,15 +10,18 @@ class PomoTimer extends StatefulWidget {
 }
 
 class _PomoTimerState extends State<PomoTimer> {
-  TimerBloc timerBloc;
-  ActivePageBloc activePageBloc;
+  PageTimersBloc pageTimersBloc;
   WhichPageBloc whichPageBloc;
+  TimerState timerStates;
+  Pages myPage;
+  TimerEvents timerEvents;
 
   @override
   Widget build(BuildContext context) {
-    timerBloc = TimerBlocProvider.of(context);
-    activePageBloc = ActivePageProvider.of(context);
+    pageTimersBloc = PageTimersProvider.of(context);
     whichPageBloc = WhichPageProvider.of(context);
+    myPage = whichPageBloc.myPage;
+    timerEvents = pageTimersBloc.timers[myPage].timerEvents;
 
     return Container(
       margin: EdgeInsets.only(left: 15.0, right: 15.0),
@@ -55,22 +58,21 @@ class _PomoTimerState extends State<PomoTimer> {
   }
 
   void start() {
-    timerBloc.updateControlEvent(TimerEvent.start);
-    activePageBloc.updateactivePage(whichPageBloc.myPage);
+    timerEvents.updateControlEvent(TimerEvent.start);
   }
 
   void pause() {
-    timerBloc.updateControlEvent(TimerEvent.pause);
+    timerEvents.updateControlEvent(TimerEvent.pause);
   }
 
   void reset() {
-    timerBloc.updateControlEvent(TimerEvent.reset);
+    pageTimersBloc.resetAll();
   }
 
   Widget timerView() {
     return Center(
       child: StreamBuilder<int>(
-        stream: timerBloc.counterVal, // a Stream<int> or null
+        stream: timerEvents.counterVal, // a Stream<int> or null
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
           if (snapshot.hasError) return Text('Error: ${snapshot.error}');
           int data = snapshot.data ?? 0;

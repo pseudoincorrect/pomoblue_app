@@ -4,7 +4,7 @@ enum TimerEvent { start, pause, reset, timeOut }
 
 enum TimerState { reset, running, paused, done }
 
-class TimerBloc {
+class TimerEvents {
   final _timerEvents = PublishSubject<TimerEvent>();
   final _timerCurrentState = BehaviorSubject<TimerState>();
   final _timerCounterVal = BehaviorSubject<int>();

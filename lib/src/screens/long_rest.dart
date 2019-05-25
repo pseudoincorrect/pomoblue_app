@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import '../bloc/timer/timer_provider.dart';
+import 'package:pomoblue/src/bloc/page_timers/page_timers_provider.dart';
+import 'package:pomoblue/src/bloc/page_timers/which_page/which_page_provider.dart';
 import '../widgets/images_select.dart';
 import '../widgets/home_timer.dart';
-import '../bloc/page_selector/active_page_provider.dart';
-import '../bloc/which_page/which_page_provider.dart';
 
 class LongRestPage extends StatelessWidget {
   const LongRestPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TimerBloc timerBloc = TimerBlocProvider.of(context);
-    timerBloc.updateCounterResetVal(45 * 60);
+    WhichPageBloc whichPageBloc = WhichPageBloc(myPage: Pages.longPause);
 
     return WhichPageProvider(
-      bloc: WhichPageBloc(myPage: Page.longPause),
+      bloc: whichPageBloc,
       child: HomeTimer(
         imagesAssets: ImagesAssets(
           ready: 'assets/images/travel_ready.jpg',

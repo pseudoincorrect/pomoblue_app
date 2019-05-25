@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:pomoblue/src/bloc/page_selector/active_page_provider.dart';
+import 'package:pomoblue/src/bloc/page_timers/page_timers_provider.dart';
 import './widgets/home_tabs.dart';
-import './bloc/timer/timer_provider.dart';
 
 class App extends StatelessWidget {
   const App({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final timerBloc = TimerBloc();
-    final activePageBloc = ActivePageBloc(timerBloc: timerBloc);
+    final pageTimersBloc = PageTimersBloc();
     preloadAssets(context);
 
-    return ActivePageProvider(
-      bloc: activePageBloc,
-      child: TimerBlocProvider(
-        bloc: timerBloc,
-        child: MaterialApp(
-          title: 'PomoBlue',
-          theme: getTheme(),
-          home: HomeTabs(),
-        ),
+    return PageTimersProvider(
+      bloc: pageTimersBloc,
+      child: MaterialApp(
+        title: 'PomoBlue',
+        theme: getTheme(),
+        home: HomeTabs(),
       ),
     );
   }

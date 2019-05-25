@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pomoblue/src/bloc/timer/timer_bloc.dart';
-import 'package:pomoblue/src/bloc/timer/timer_provider.dart';
-import 'package:pomoblue/src/bloc/which_page/which_page_provider.dart';
-import 'package:pomoblue/src/bloc/page_selector/active_page_provider.dart';
+import 'package:pomoblue/src/bloc/page_timers/page_timers_provider.dart';
+import 'package:pomoblue/src/bloc/page_timers/timer/timer_events.dart';
+import 'package:pomoblue/src/bloc/page_timers/which_page/which_page_provider.dart';
 
 class SlideSelect extends StatefulWidget {
   final String hideText;
@@ -14,21 +13,23 @@ class SlideSelect extends StatefulWidget {
 }
 
 class _SlideSelectState extends State<SlideSelect> {
-  TimerBloc timerBloc;
+  PageTimersBloc pageTimersBloc;
   WhichPageBloc whichPageBloc;
+  TimerState timerStates;
+  Pages myPage;
+  TimerEvents timerEvents;
 
   double _slideVal = 25.0;
   @override
   Widget build(BuildContext context) {
-    timerBloc = TimerBlocProvider.of(context);
-
-    int ind = DefaultTabController.of(context).index;
-    print("index " + ind.toString());
+    pageTimersBloc = PageTimersProvider.of(context);
+    whichPageBloc = WhichPageProvider.of(context);
+    myPage = whichPageBloc.myPage;
+    timerEvents = pageTimersBloc.timers[myPage].timerEvents;
 
     return StreamBuilder<TimerState>(
-      stream: timerBloc.currentState,
+      stream: timerEvents.currentState,
       builder: (BuildContext context, AsyncSnapshot<TimerState> snapshot) {
-        setDefaultResetVal(context);
         if (!snapshot.hasData) {
           return Container(
             child: sliderWidget(),
@@ -70,7 +71,7 @@ class _SlideSelectState extends State<SlideSelect> {
               onChanged: (double val) {
                 setState(() {
                   _slideVal = val;
-                  timerBloc.updateCounterResetVal(getRoundSeconds(val));
+                  timerEvents.updateCounterResetVal(getRoundSeconds(val));
                 });
               },
             ),
@@ -91,14 +92,14 @@ class _SlideSelectState extends State<SlideSelect> {
     return val.toInt() * 60;
   }
 
-  void setDefaultResetVal(BuildContext context) {
-    whichPageBloc = WhichPageProvider.of(context);
-    if (whichPageBloc.myPage == Page.work) {
-      timerBloc.updateCounterResetVal(60 * 25);
-    } else if (whichPageBloc.myPage == Page.shortPause) {
-      timerBloc.updateCounterResetVal(60 * 5);
-    } else if (whichPageBloc.myPage == Page.longPause) {
-      timerBloc.updateCounterResetVal(60 * 45);
-    }
-  }
+  // void setDefaultResetVal(BuildContext context) {
+  //   whichPageBloc = WhichPageProvider.of(context);
+  //   if (whichPageBloc.myPage == Pages.work) {
+  //     timerBloc.updateCounterResetVal(60 * 25);
+  //   } else if (whichPageBloc.myPage == Pages.shortPause) {
+  //     timerBloc.updateCounterResetVal(60 * 5);
+  //   } else if (whichPageBloc.myPage == Pages.longPause) {
+  //     timerBloc.updateCounterResetVal(60 * 45);
+  //   }
+  // }
 }

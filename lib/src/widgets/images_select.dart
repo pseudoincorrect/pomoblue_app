@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pomoblue/src/bloc/timer/timer_bloc.dart';
-import '../bloc/timer/timer_provider.dart';
+import 'package:pomoblue/src/bloc/page_timers/page_timers_bloc.dart';
+import 'package:pomoblue/src/bloc/page_timers/page_timers_provider.dart';
+import 'package:pomoblue/src/bloc/page_timers/timer/timer_events.dart';
+import 'package:pomoblue/src/bloc/page_timers/timer/timer_interface.dart';
+import 'package:pomoblue/src/bloc/page_timers/which_page/which_page_provider.dart';
 import '../widgets/image_container.dart';
 
 class ImagesAssets {
@@ -19,14 +22,19 @@ class ImagesSelect extends StatefulWidget {
 }
 
 class _ImagesSelectState extends State<ImagesSelect> {
-  TimerBloc timerBloc;
+  PageTimersBloc pageTimersBloc;
+  WhichPageBloc whichPageBloc;
+  Pages myPage;
 
   @override
   Widget build(BuildContext context) {
-    timerBloc = TimerBlocProvider.of(context);
+    pageTimersBloc = PageTimersProvider.of(context);
+    whichPageBloc = WhichPageProvider.of(context);
+    myPage = whichPageBloc.myPage;
+    TimerEvents timerEvents = pageTimersBloc.timers[myPage].timerEvents;
 
     return StreamBuilder<TimerState>(
-      stream: timerBloc.currentState,
+      stream: timerEvents.currentState,
       builder: (
         BuildContext context,
         AsyncSnapshot<TimerState> snapshot,

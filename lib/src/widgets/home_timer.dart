@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../bloc/page_selector/active_page_provider.dart';
-import '../bloc/timer/timer_provider.dart';
-import '../bloc/which_page/which_page_provider.dart';
+import '../bloc/page_timers/timer/timer_events.dart';
+import '../bloc/page_timers/page_timers_provider.dart';
+import '../bloc/page_timers/which_page/which_page_provider.dart';
 import '../screens/bluetooth_devices.dart';
 import '../widgets/timer.dart';
 import '../widgets/images_select.dart';
@@ -26,21 +26,21 @@ class HomeTimer extends StatefulWidget {
 
 class _HomeTimerState extends State<HomeTimer> {
   bool isActive = true;
-  TimerBloc timerBloc;
-  ActivePageBloc activePageBloc;
+  PageTimersBloc pageTimersBloc;
   WhichPageBloc whichPageBloc;
+  Pages myPage;
 
   @override
   Widget build(BuildContext context) {
-    timerBloc = TimerBlocProvider.of(context);
-    activePageBloc = ActivePageProvider.of(context);
+    pageTimersBloc = PageTimersProvider.of(context);
     whichPageBloc = WhichPageProvider.of(context);
+    myPage = whichPageBloc.myPage;
 
-    return StreamBuilder<Page>(
-      stream: activePageBloc.activePage,
-      builder: (BuildContext context, AsyncSnapshot<Page> snapshot) {
+    return StreamBuilder<Pages>(
+      stream: pageTimersBloc.activePage,
+      builder: (BuildContext context, AsyncSnapshot<Pages> snapshot) {
         if (!snapshot.hasData) return inactiveTimer();
-        if (snapshot.data == Page.none ||
+        if (snapshot.data == Pages.none ||
             snapshot.data == whichPageBloc.myPage) {
           return activeTimer();
         } else {
@@ -80,7 +80,7 @@ class _HomeTimerState extends State<HomeTimer> {
             child: Text("restart Here"),
             onPressed: () {
               setState(() {
-                timerBloc.updateControlEvent(TimerEvent.reset);
+                pageTimersBloc.resetAll();
               });
             },
           ),

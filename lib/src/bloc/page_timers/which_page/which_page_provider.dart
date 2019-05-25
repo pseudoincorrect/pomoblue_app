@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../page_selector/active_page_provider.dart';
+import '../../page_timers/page_timers_bloc.dart';
 
 class WhichPageBloc {
-  final Page myPage;
+  final Pages myPage;
   WhichPageBloc({this.myPage});
 }
 

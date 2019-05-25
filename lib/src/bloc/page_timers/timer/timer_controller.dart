@@ -1,19 +1,19 @@
 import 'dart:async';
-import 'package:pomoblue/src/bloc/timer/timer_bloc.dart';
+import './timer_events.dart';
 
 const Duration period = Duration(milliseconds: 100);
 
 class TimerController {
-  TimerBloc bloc;
+  TimerEvents bloc;
   Timer timer;
   TimerState timerState;
   int counter;
   int resetVal;
   static const int defaultWorkTime = 25 * 60; // seconds
 
-  void setup(TimerBloc timerBloc, {int defaultTime = defaultWorkTime}) {
+  void setup(TimerEvents timerEvents, {int defaultTime = defaultWorkTime}) {
     // Attributes
-    bloc = timerBloc;
+    bloc = timerEvents;
     resetVal = defaultTime;
     counter = resetVal;
     timerState = TimerState.reset;
