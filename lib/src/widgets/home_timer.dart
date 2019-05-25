@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../bloc/page_timers/timer/timer_events.dart';
 import '../bloc/page_timers/page_timers_provider.dart';
 import '../bloc/page_timers/which_page/which_page_provider.dart';
 import '../screens/bluetooth_devices.dart';

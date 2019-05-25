@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pomoblue/src/bloc/page_timers/page_timers_bloc.dart';
 import 'package:pomoblue/src/bloc/page_timers/page_timers_provider.dart';
 import 'package:pomoblue/src/bloc/page_timers/timer/timer_events.dart';
-import 'package:pomoblue/src/bloc/page_timers/timer/timer_interface.dart';
 import 'package:pomoblue/src/bloc/page_timers/which_page/which_page_provider.dart';
 import '../widgets/image_container.dart';
 
