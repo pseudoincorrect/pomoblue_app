@@ -10,6 +10,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     final timerBloc = TimerBloc();
     final activePageBloc = ActivePageBloc(timerBloc: timerBloc);
+    preloadAssets(context);
+
     return ActivePageProvider(
       bloc: activePageBloc,
       child: TimerBlocProvider(
@@ -44,5 +46,17 @@ class App extends StatelessWidget {
         textTheme: ButtonTextTheme.primary,
       ),
     );
+  }
+
+  void preloadAssets(BuildContext context) {
+    precacheImage(AssetImage('assets/images/work_ready.jpg'), context);
+    precacheImage(AssetImage('assets/images/work_done.jpg'), context);
+    precacheImage(AssetImage('assets/images/work_time.jpg'), context);
+    precacheImage(AssetImage('assets/images/chair_ready.jpg'), context);
+    precacheImage(AssetImage('assets/images/chair_done.jpg'), context);
+    precacheImage(AssetImage('assets/images/relax_time.jpg'), context);
+    precacheImage(AssetImage('assets/images/travel_ready.jpg'), context);
+    precacheImage(AssetImage('assets/images/travel_done.jpg'), context);
+    precacheImage(AssetImage('assets/images/relax_time.jpg'), context);
   }
 }

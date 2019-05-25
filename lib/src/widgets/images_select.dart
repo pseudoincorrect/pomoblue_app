@@ -25,10 +25,6 @@ class _ImagesSelectState extends State<ImagesSelect> {
   Widget build(BuildContext context) {
     timerBloc = TimerBlocProvider.of(context);
 
-    precacheImage(AssetImage(widget.images.ready), context);
-    precacheImage(AssetImage(widget.images.running), context);
-    precacheImage(AssetImage(widget.images.done), context);
-
     return StreamBuilder<TimerState>(
       stream: timerBloc.currentState,
       builder: (

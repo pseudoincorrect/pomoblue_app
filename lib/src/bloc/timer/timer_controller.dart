@@ -29,16 +29,16 @@ class TimerController {
   void onPeriodicEvent(Timer timer) {
     if (counter > 0) {
       counter--;
+      bloc.updateCounterVal(counter);
     } else {
       cancelTimer();
       bloc.updateControlEvent(TimerEvent.timeOut);
     }
-    bloc.updateCounterVal(counter);
   }
 
   void onControlEvent(TimerEvent timerEvent) {
     if (timerEvent == TimerEvent.start) {
-      if (timerState == TimerState.done) return;
+      // if (timerState == TimerState.done) return;
       if (timer == null) {
         timer = Timer.periodic(period, onPeriodicEvent);
       } else if (!timer.isActive) {
@@ -99,6 +99,9 @@ class TimerController {
           break;
 
         case TimerState.done:
+          if (timerEvent == TimerEvent.start) {
+            timerState = TimerState.running;
+          }
           break;
 
         default:
