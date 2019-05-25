@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pomoblue/src/bloc/page_timers/page_timers_provider.dart';
 import './widgets/home_tabs.dart';
 
@@ -7,6 +8,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     final pageTimersBloc = PageTimersBloc();
     preloadAssets(context);
 

@@ -1,34 +1,34 @@
 import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pomoblue/src/bloc/timer/timer_bloc.dart';
+import 'package:pomoblue/src/bloc/page_timers/timer/timer_events.dart';
 
 void main() {
   group(
-    'TimerBloc Class Tests',
+    'PageTimerBloc Class Tests',
     () {
+      final timerEvents = TimerEvents();
+
       test(
         'updateControlEvent should emit a TimerEvent event',
         () async {
           // SETUP
-          final timerBloc = TimerBloc();
           final TimerEvent controlEventsent = TimerEvent.pause;
           // // RUN TIME
           scheduleMicrotask(() {
-            timerBloc.updateControlEvent(controlEventsent);
+            timerEvents.updateControlEvent(controlEventsent);
           });
           // TEST
-          await expectLater(timerBloc.controlEvents, emits(TimerEvent.pause));
+          await expectLater(timerEvents.controlEvents, emits(TimerEvent.pause));
         },
       );
       test(
         'updateControlEvent should expect a listened TimerEvent equal to the one emited',
         () async {
           // SETUP
-          final timerBloc = TimerBloc();
           final TimerEvent controlEventsent = TimerEvent.pause;
-          dynamic firstEvent = timerBloc.controlEvents.first;
+          dynamic firstEvent = timerEvents.controlEvents.first;
           // // RUN TIME
-          timerBloc.updateControlEvent(controlEventsent);
+          timerEvents.updateControlEvent(controlEventsent);
           dynamic controlEventReceived = await firstEvent;
           // TEST
           expect(controlEventReceived, controlEventsent);
@@ -38,11 +38,10 @@ void main() {
         'updateCounterVal should expect a listened integer equal to the one emited',
         () async {
           // SETUP
-          final timerBloc = TimerBloc();
           final int counterValsent = 1;
-          dynamic firstEvent = timerBloc.counterVal.first;
+          dynamic firstEvent = timerEvents.counterVal.first;
           // // RUN TIME
-          timerBloc.updateCounterVal(counterValsent);
+          timerEvents.updateCounterVal(counterValsent);
           dynamic counterValReceived = await firstEvent;
           // TEST
           expect(counterValReceived, counterValsent);
@@ -52,11 +51,10 @@ void main() {
         'updateCounterVal should expect a listened integer equal to the one emited',
         () async {
           // SETUP
-          final timerBloc = TimerBloc();
           final int counterValsent = 1;
-          dynamic firstEvent = timerBloc.counterVal.first;
+          dynamic firstEvent = timerEvents.counterVal.first;
           // // RUN TIME
-          timerBloc.updateCounterVal(counterValsent);
+          timerEvents.updateCounterVal(counterValsent);
           dynamic counterValReceived = await firstEvent;
           // TEST
           expect(counterValReceived, counterValsent);
@@ -66,11 +64,10 @@ void main() {
         'updateCounterResetVal should expect a listened integer equal to the one emited',
         () async {
           // SETUP
-          final timerBloc = TimerBloc();
           final int counterResedValsent = 999;
-          dynamic firstEvent = timerBloc.counterResetVal.first;
+          dynamic firstEvent = timerEvents.counterResetVal.first;
           // // RUN TIME
-          timerBloc.updateCounterResetVal(counterResedValsent);
+          timerEvents.updateCounterResetVal(counterResedValsent);
           dynamic counterResedValReceived = await firstEvent;
           // TEST
           expect(counterResedValReceived, counterResedValsent);

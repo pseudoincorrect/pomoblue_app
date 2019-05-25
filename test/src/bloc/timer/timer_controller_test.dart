@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pomoblue/src/bloc/timer/timer_controller.dart';
-import 'package:pomoblue/src/bloc/timer/timer_bloc.dart';
+import 'package:pomoblue/src/bloc/page_timers/timer/timer_controller.dart';
+import 'package:pomoblue/src/bloc/page_timers/timer/timer_events.dart';
 import 'dart:async';
 
 void main() {
@@ -8,28 +8,26 @@ void main() {
     'TimerController Class Tests',
     () {
       // SETUP
-      final timerBloc = TimerBloc();
+      final timerEvent = TimerEvents();
       final timerController = TimerController();
-      timerController.setup(timerBloc);
-
+      timerController.setup(timerEvent);
+      int defaultTime = TimerController.defaultTimeInSecs;
       test(
         'setup should emit a updateCounterVal and updateCurrentState event',
         () async {
           // TEST
-          await expectLater(
-              timerBloc.counterVal, emits(TimerController.defaultWorkTime));
-          await expectLater(timerBloc.currentState, emits(TimerState.reset));
+          await expectLater(timerEvent.counterVal, emits(defaultTime));
+          await expectLater(timerEvent.currentState, emits(TimerState.reset));
         },
       );
       test(
         'onPeriodicEvent should emit a TimerEvent event',
         () async {
           // RUN TIME
-          timerBloc.updateControlEvent(TimerEvent.start);
+          timerEvent.updateControlEvent(TimerEvent.start);
           timerController.onPeriodicEvent(Timer(Duration(), () {}));
           // TEST
-          await expectLater(
-              timerBloc.counterVal, emits(TimerController.defaultWorkTime - 1));
+          await expectLater(timerEvent.counterVal, emits(defaultTime - 1));
         },
       );
       test(

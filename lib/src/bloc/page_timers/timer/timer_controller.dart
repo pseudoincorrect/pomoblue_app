@@ -1,7 +1,8 @@
 import 'dart:async';
+import '../page_timers_provider.dart';
 import './timer_events.dart';
 
-const Duration period = Duration(milliseconds: 100);
+const Duration period = Duration(milliseconds: 1000);
 
 class TimerController {
   TimerEvents bloc;
@@ -9,9 +10,10 @@ class TimerController {
   TimerState timerState;
   int counter;
   int resetVal;
-  static const int defaultWorkTime = 25 * 60; // seconds
+  static const int defaultTimeInSecs = 25 * secondsInMinutes;
 
-  void setup(TimerEvents timerEvents, {int defaultTime = defaultWorkTime}) {
+  void setup(TimerEvents timerEvents,
+      {int defaultTime = TimerController.defaultTimeInSecs}) {
     // Attributes
     bloc = timerEvents;
     resetVal = defaultTime;

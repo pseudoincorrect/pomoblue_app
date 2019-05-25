@@ -20,7 +20,9 @@ class HomeTabs extends StatelessWidget {
                 icon: Icon(Icons.rowing),
               ),
               Tab(
-                child: tabTitle('Short Break'),
+                child: tabTitle(
+                  'Short Break',
+                ),
                 icon: Icon(Icons.airline_seat_legroom_extra),
               ),
               Tab(
@@ -44,6 +46,7 @@ class HomeTabs extends StatelessWidget {
   Widget tabTitle(String textTab) {
     return Text(
       textTab,
+      textAlign: TextAlign.center,
       style: TextStyle(fontSize: 10),
     );
   }

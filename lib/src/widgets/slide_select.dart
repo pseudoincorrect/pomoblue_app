@@ -18,14 +18,19 @@ class _SlideSelectState extends State<SlideSelect> {
   TimerState timerStates;
   Pages myPage;
   TimerEvents timerEvents;
+  double _slideVal;
 
-  double _slideVal = 25.0;
   @override
   Widget build(BuildContext context) {
     pageTimersBloc = PageTimersProvider.of(context);
     whichPageBloc = WhichPageProvider.of(context);
     myPage = whichPageBloc.myPage;
     timerEvents = pageTimersBloc.timers[myPage].timerEvents;
+    // _slideVal = TimersResetVal[myPage].toDouble() / secondsInMinutes;
+
+    if (_slideVal == null) {
+      _slideVal = TimersResetVal[myPage].toDouble() / secondsInMinutes;
+    }
 
     return StreamBuilder<TimerState>(
       stream: timerEvents.currentState,
@@ -89,7 +94,7 @@ class _SlideSelectState extends State<SlideSelect> {
   }
 
   int getRoundSeconds(double val) {
-    return val.toInt() * 60;
+    return val.toInt() * secondsInMinutes;
   }
 
   // void setDefaultResetVal(BuildContext context) {

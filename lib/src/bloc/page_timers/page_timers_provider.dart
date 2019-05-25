@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import './page_timers_bloc.dart';
 export './page_timers_bloc.dart';
 
+const int secondsInMinutes = 60;
+
 class PageTimersProvider extends InheritedWidget {
   final PageTimersBloc bloc;
 
