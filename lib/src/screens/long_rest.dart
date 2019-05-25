@@ -16,7 +16,6 @@ class LongRestPage extends StatelessWidget {
     return WhichPageProvider(
       bloc: WhichPageBloc(myPage: Page.longPause),
       child: HomeTimer(
-        page: Page.longPause,
         imagesAssets: ImagesAssets(
           ready: 'assets/images/travel_ready.jpg',
           done: 'assets/images/travel_done.jpg',

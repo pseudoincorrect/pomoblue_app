@@ -54,6 +54,12 @@ class TimerController {
       bloc.updateCounterVal(counter);
       cancelTimer();
     }
+
+    if (timerEvent == TimerEvent.timeOut) {
+      counter = resetVal;
+      bloc.updateCounterVal(counter);
+      cancelTimer();
+    }
   }
 
   void onResetValData(int newVal) {

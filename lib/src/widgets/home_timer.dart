@@ -10,14 +10,12 @@ import '../widgets/image_container.dart';
 // import '../widgets/device_info.dart';
 
 class HomeTimer extends StatefulWidget {
-  final Page page;
   final String hideText;
   final ImagesAssets imagesAssets;
   final Color backGroundColor;
 
   const HomeTimer({
     Key key,
-    this.page,
     this.imagesAssets,
     this.hideText,
     this.backGroundColor,
@@ -74,7 +72,6 @@ class _HomeTimerState extends State<HomeTimer> {
 
   Widget inactiveTimer() {
     return Container(
-      // decoration: BoxDecoration(color: backGroundColor),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -84,7 +81,6 @@ class _HomeTimerState extends State<HomeTimer> {
             onPressed: () {
               setState(() {
                 timerBloc.updateControlEvent(TimerEvent.reset);
-                // isActive = !isActive;
               });
             },
           ),

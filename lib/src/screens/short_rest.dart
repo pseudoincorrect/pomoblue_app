@@ -16,7 +16,6 @@ class ShortRestPage extends StatelessWidget {
     return WhichPageProvider(
       bloc: WhichPageBloc(myPage: Page.shortPause),
       child: HomeTimer(
-        page: Page.shortPause,
         imagesAssets: ImagesAssets(
           ready: 'assets/images/chair_ready.jpg',
           done: 'assets/images/chair_done.jpg',

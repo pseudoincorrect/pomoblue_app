@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 
 enum TimerEvent { start, pause, reset, timeOut }
