@@ -6,7 +6,7 @@ class DeviceInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text("Selected Device"),
+      child: Text("No Selected Device"),
     );
   }
 }

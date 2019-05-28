@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pomoblue/src/bloc/page_timers/page_timers_provider.dart';
-import './widgets/home_tabs.dart';
+import './screens/home_tabs.dart';
 
 class App extends StatelessWidget {
   const App({Key key}) : super(key: key);
@@ -33,13 +33,6 @@ class App extends StatelessWidget {
       primaryColor: Colors.blue,
       accentColor: Colors.blueAccent,
       fontFamily: '8BitsWonder',
-
-      // textTheme: TextTheme(
-      //   headline: TextStyle(fontSize: 80.0, fontWeight: FontWeight.bold),
-      //   title: TextStyle(fontSize: 42.0, fontStyle: FontStyle.italic),
-      //   body1: TextStyle(fontSize: 16.0, fontFamily: 'Hind'),
-      // ),
-
       buttonTheme: ButtonThemeData(
         buttonColor: Colors.blue,
         shape: RoundedRectangleBorder(

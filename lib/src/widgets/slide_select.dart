@@ -26,7 +26,6 @@ class _SlideSelectState extends State<SlideSelect> {
     whichPageBloc = WhichPageProvider.of(context);
     myPage = whichPageBloc.myPage;
     timerEvents = pageTimersBloc.timers[myPage].timerEvents;
-    // _slideVal = TimersResetVal[myPage].toDouble() / secondsInMinutes;
 
     if (_slideVal == null) {
       _slideVal = TimersResetVal[myPage].toDouble() / secondsInMinutes;
@@ -96,15 +95,4 @@ class _SlideSelectState extends State<SlideSelect> {
   int getRoundSeconds(double val) {
     return val.toInt() * secondsInMinutes;
   }
-
-  // void setDefaultResetVal(BuildContext context) {
-  //   whichPageBloc = WhichPageProvider.of(context);
-  //   if (whichPageBloc.myPage == Pages.work) {
-  //     timerBloc.updateCounterResetVal(60 * 25);
-  //   } else if (whichPageBloc.myPage == Pages.shortPause) {
-  //     timerBloc.updateCounterResetVal(60 * 5);
-  //   } else if (whichPageBloc.myPage == Pages.longPause) {
-  //     timerBloc.updateCounterResetVal(60 * 45);
-  //   }
-  // }
 }

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import '../bloc/page_timers/page_timers_provider.dart';
 import '../bloc/page_timers/which_page/which_page_provider.dart';
-import '../screens/bluetooth_devices.dart';
 import '../widgets/timer.dart';
 import '../widgets/images_select.dart';
 import '../widgets/slide_select.dart';
 import '../widgets/image_container.dart';
-// import '../widgets/device_info.dart';
+import '../widgets/device_info.dart';
 
 class HomeTimer extends StatefulWidget {
   final String hideText;
@@ -38,13 +37,13 @@ class _HomeTimerState extends State<HomeTimer> {
     return StreamBuilder<Pages>(
       stream: pageTimersBloc.activePage,
       builder: (BuildContext context, AsyncSnapshot<Pages> snapshot) {
-        if (!snapshot.hasData) return inactiveTimer();
-        if (snapshot.data == Pages.none ||
-            snapshot.data == whichPageBloc.myPage) {
-          return activeTimer();
-        } else {
+        if (!snapshot.hasData) {
           return inactiveTimer();
         }
+        if (snapshot.data == Pages.none || snapshot.data == myPage) {
+          return activeTimer();
+        }
+        return inactiveTimer();
       },
     );
   }
@@ -63,7 +62,7 @@ class _HomeTimerState extends State<HomeTimer> {
               running: widget.imagesAssets.running,
             ),
           ),
-          // DeviceInfo(),
+          DeviceInfo(),
         ],
       ),
     );
@@ -84,16 +83,9 @@ class _HomeTimerState extends State<HomeTimer> {
             },
           ),
           ImageContainer(imageAsset: widget.imagesAssets.ready),
-          // DeviceInfo(),
+          DeviceInfo(),
         ],
       ),
-    );
-  }
-
-  toBluetoothDevices(context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => BluetoothDevicesPage()),
     );
   }
 }
