@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import '../../app_constants.dart';
 
 class ScanResultTile extends StatelessWidget {
   final ScanResult result;
@@ -9,6 +10,16 @@ class ScanResultTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String deviceName =
+        result.advertisementData.localName.toString().toLowerCase();
+    if (deviceName.contains(deviceNameFilter)) {
+      return _buildExpansionTile(context);
+    } else {
+      return Container();
+    }
+  }
+
+  Widget _buildExpansionTile(BuildContext context) {
     return ExpansionTile(
       title: _buildTitle(context),
       // leading: Text(result.rssi.toString()),

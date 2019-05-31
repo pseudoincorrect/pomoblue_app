@@ -1,10 +1,10 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import '../widgets/bluetooth/characteristic_tile.dart';
 import '../widgets/bluetooth/descriptor_tile.dart';
 import '../widgets/bluetooth/scan_result_tile.dart';
 import '../widgets/bluetooth/service_tile.dart';
+import '../bloc/bluetooth/bluetooth_provider.dart';
 
 class BluetoothDevicesList extends StatefulWidget {
   BluetoothDevicesList({Key key}) : super(key: key);
@@ -13,33 +13,23 @@ class BluetoothDevicesList extends StatefulWidget {
 }
 
 class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
-  FlutterBlue _flutterBlue = FlutterBlue.instance;
-
-  /// State
-  StreamSubscription _stateSubscription;
-  BluetoothState bluetoothState = BluetoothState.unknown;
-
-  /// Scanning
-  StreamSubscription _scanSubscription;
-  Map<DeviceIdentifier, ScanResult> scanResults = new Map();
-  bool isScanning = false;
-
-  /// Device
-  BluetoothDevice device;
-  bool get isConnected => (device != null);
-  StreamSubscription deviceConnection;
-  StreamSubscription deviceStateSubscription;
-  List<BluetoothService> services = new List();
-  Map<Guid, StreamSubscription> valueChangedSubscriptions = {};
-  BluetoothDeviceState deviceState = BluetoothDeviceState.disconnected;
+  bool blocInitialised = false;
+  BluetoothBloc _b;
 
   @override
   Widget build(BuildContext context) {
+    _b = BluetoothProvider.of(context);
+
+    if (!blocInitialised) {
+      blocInitialiser();
+      blocInitialised = true;
+    }
+
     var tiles = List<Widget>();
-    if (bluetoothState != BluetoothState.on) {
+    if (_b.bluetoothState != BluetoothState.on) {
       tiles.add(_buildAlertTile());
     }
-    if (isConnected) {
+    if (_b.isConnected) {
       tiles.add(_buildDeviceStateTile());
       tiles.addAll(_buildServiceTiles());
     } else {
@@ -51,52 +41,35 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
         title: const Text('FlutterBlue', style: TextStyle(fontSize: 16)),
         actions: _buildActionButtons(),
       ),
-
       body: new Stack(
         children: <Widget>[
-          (isScanning) ? _buildProgressBarTile() : new Container(),
+          (_b.isScanning) ? _buildProgressBarTile() : new Container(),
           new ListView(
             children: tiles,
           )
         ],
       ),
-      // body: ListView(
-      //   children: tiles,
-      // ),
       floatingActionButton: _buildScanningButton(),
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
+  void blocInitialiser() {
     // Immediately get the state of FlutterBlue
-    _flutterBlue.state.then((s) {
+    _b.flutterBlue.state.then((s) {
       setState(() {
-        bluetoothState = s;
+        _b.bluetoothState = s;
       });
     });
     // Subscribe to state changes
-    _stateSubscription = _flutterBlue.onStateChanged().listen((s) {
+    _b.stateSubscription = _b.flutterBlue.onStateChanged().listen((s) {
       setState(() {
-        bluetoothState = s;
+        _b.bluetoothState = s;
       });
     });
   }
 
-  @override
-  void dispose() {
-    _stateSubscription?.cancel();
-    _stateSubscription = null;
-    _scanSubscription?.cancel();
-    _scanSubscription = null;
-    deviceConnection?.cancel();
-    deviceConnection = null;
-    super.dispose();
-  }
-
   _buildActionButtons() {
-    if (isConnected) {
+    if (_b.isConnected) {
       return <Widget>[
         new IconButton(
           icon: const Icon(Icons.cancel),
@@ -111,7 +84,7 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
       color: Colors.redAccent,
       child: new ListTile(
         title: new Text(
-          'Bluetooth adapter is ${bluetoothState.toString().substring(15)}',
+          'Bluetooth adapter is ${_b.bluetoothState.toString().substring(15)}',
           style: Theme.of(context).primaryTextTheme.subhead,
         ),
         trailing: new Icon(
@@ -123,7 +96,7 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
   }
 
   _buildScanResultTiles() {
-    return scanResults.values
+    return _b.scanResults.values
         .map((r) => ScanResultTile(
             result: r,
             onTap: () {
@@ -133,10 +106,10 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
   }
 
   _buildScanningButton() {
-    if (isConnected || bluetoothState != BluetoothState.on) {
+    if (_b.isConnected || _b.bluetoothState != BluetoothState.on) {
       return null;
     }
-    if (isScanning) {
+    if (_b.isScanning) {
       return new FloatingActionButton(
         child: new Icon(Icons.stop),
         onPressed: _stopScan,
@@ -149,56 +122,56 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
   }
 
   _startScan() {
-    scanResults.clear();
-    _scanSubscription = _flutterBlue
+    _b.scanResults.clear();
+    _b.scanSubscription = _b.flutterBlue
         .scan(timeout: const Duration(seconds: 5))
         .listen((scanResult) {
       setState(
         () {
-          scanResults[scanResult.device.id] = scanResult;
+          _b.scanResults[scanResult.device.id] = scanResult;
         },
       );
     }, onDone: _stopScan);
 
     setState(() {
-      isScanning = true;
+      _b.isScanning = true;
     });
   }
 
   _stopScan() {
-    _scanSubscription?.cancel();
-    _scanSubscription = null;
+    _b.scanSubscription?.cancel();
+    _b.scanSubscription = null;
     setState(() {
-      isScanning = false;
+      _b.isScanning = false;
     });
   }
 
   _connect(BluetoothDevice d) async {
-    device = d;
-    // Connect to device
-    deviceConnection = _flutterBlue
-        .connect(device, timeout: const Duration(seconds: 4))
+    _b.device = d;
+    // Connect to _b.device
+    _b.deviceConnection = _b.flutterBlue
+        .connect(_b.device, timeout: const Duration(seconds: 4))
         .listen(
           null,
           onDone: _disconnect,
         );
 
     // Update the connection state immediately
-    device.state.then((s) {
+    _b.device.state.then((s) {
       setState(() {
-        deviceState = s;
+        _b.deviceState = s;
       });
     });
 
     // Subscribe to connection changes
-    deviceStateSubscription = device.onStateChanged().listen((s) {
+    _b.deviceStateSubscription = _b.device.onStateChanged().listen((s) {
       setState(() {
-        deviceState = s;
+        _b.deviceState = s;
       });
       if (s == BluetoothDeviceState.connected) {
-        device.discoverServices().then((s) {
+        _b.device.discoverServices().then((s) {
           setState(() {
-            services = s;
+            _b.services = s;
           });
         });
       }
@@ -207,27 +180,28 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
 
   _disconnect() {
     // Remove all value changed listeners
-    valueChangedSubscriptions.forEach((uuid, sub) => sub.cancel());
-    valueChangedSubscriptions.clear();
-    deviceStateSubscription?.cancel();
-    deviceStateSubscription = null;
-    deviceConnection?.cancel();
-    deviceConnection = null;
+    _b.valueChangedSubscriptions.forEach((uuid, sub) => sub.cancel());
+    _b.valueChangedSubscriptions.clear();
+    _b.deviceStateSubscription?.cancel();
+    _b.deviceStateSubscription = null;
+    _b.deviceConnection?.cancel();
+    _b.deviceConnection = null;
     setState(() {
-      device = null;
+      _b.device = null;
     });
   }
 
   _buildDeviceStateTile() {
     return new ListTile(
-        leading: (deviceState == BluetoothDeviceState.connected)
+        leading: (_b.deviceState == BluetoothDeviceState.connected)
             ? const Icon(Icons.bluetooth_connected)
             : const Icon(Icons.bluetooth_disabled),
-        title: new Text('Device is ${deviceState.toString().split('.')[1]}.'),
-        subtitle: new Text('${device.id}'),
+        title:
+            new Text('Device is ${_b.deviceState.toString().split('.')[1]}.'),
+        subtitle: new Text('${_b.device.id}'),
         trailing: new IconButton(
           icon: const Icon(Icons.refresh),
-          onPressed: () => _refreshDeviceState(device),
+          onPressed: () => _refreshDeviceState(_b.device),
           color: Theme.of(context).iconTheme.color.withOpacity(0.5),
         ));
   }
@@ -235,8 +209,8 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
   _refreshDeviceState(BluetoothDevice d) async {
     var state = await d.state;
     setState(() {
-      deviceState = state;
-      print('State refreshed: $deviceState');
+      _b.deviceState = state;
+      print('State refreshed: $_b.deviceState');
     });
   }
 
@@ -245,7 +219,7 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
   }
 
   List<Widget> _buildServiceTiles() {
-    return services
+    return _b.services
         .map(
           (s) => new ServiceTile(
                 service: s,
@@ -275,42 +249,41 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
   }
 
   _readCharacteristic(BluetoothCharacteristic c) async {
-    await device.readCharacteristic(c);
+    await _b.readCharacteristic(c);
     setState(() {});
   }
 
   _writeCharacteristic(BluetoothCharacteristic c) async {
-    await device.writeCharacteristic(c, [0x12, 0x34],
-        type: CharacteristicWriteType.withResponse);
+    await _b.writeCharacteristic(c);
     setState(() {});
   }
 
   _readDescriptor(BluetoothDescriptor d) async {
-    await device.readDescriptor(d);
+    await _b.readDescriptor(d);
     setState(() {});
   }
 
   _writeDescriptor(BluetoothDescriptor d) async {
-    await device.writeDescriptor(d, [0x12, 0x34]);
+    await _b.writeDescriptor(d);
     setState(() {});
   }
 
   _setNotification(BluetoothCharacteristic c) async {
     if (c.isNotifying) {
-      await device.setNotifyValue(c, false);
+      await _b.device.setNotifyValue(c, false);
       // Cancel subscription
-      valueChangedSubscriptions[c.uuid]?.cancel();
-      valueChangedSubscriptions.remove(c.uuid);
+      _b.valueChangedSubscriptions[c.uuid]?.cancel();
+      _b.valueChangedSubscriptions.remove(c.uuid);
     } else {
-      await device.setNotifyValue(c, true);
+      await _b.device.setNotifyValue(c, true);
       // ignore: cancel_subscriptions
-      final sub = device.onValueChanged(c).listen((d) {
+      final sub = _b.device.onValueChanged(c).listen((d) {
         setState(() {
           print('onValueChanged $d');
         });
       });
       // Add to map
-      valueChangedSubscriptions[c.uuid] = sub;
+      _b.valueChangedSubscriptions[c.uuid] = sub;
     }
     setState(() {});
   }
