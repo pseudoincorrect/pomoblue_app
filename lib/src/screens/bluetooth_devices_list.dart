@@ -31,7 +31,7 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
     }
     if (_b.isConnected) {
       tiles.add(_buildDeviceStateTile());
-      tiles.addAll(_buildServiceTiles());
+      // tiles.addAll(_buildServiceTiles());
     } else {
       tiles.addAll(_buildScanResultTiles());
     }
@@ -73,7 +73,7 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
       return <Widget>[
         new IconButton(
           icon: const Icon(Icons.cancel),
-          onPressed: () => _disconnect(),
+          onPressed: () => _b.disconnect(),
         )
       ];
     }
@@ -153,7 +153,7 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
         .connect(_b.device, timeout: const Duration(seconds: 4))
         .listen(
           null,
-          onDone: _disconnect,
+          onDone: _b.disconnect,
         );
 
     // Update the connection state immediately
@@ -175,19 +175,6 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
           });
         });
       }
-    });
-  }
-
-  _disconnect() {
-    // Remove all value changed listeners
-    _b.valueChangedSubscriptions.forEach((uuid, sub) => sub.cancel());
-    _b.valueChangedSubscriptions.clear();
-    _b.deviceStateSubscription?.cancel();
-    _b.deviceStateSubscription = null;
-    _b.deviceConnection?.cancel();
-    _b.deviceConnection = null;
-    setState(() {
-      _b.device = null;
     });
   }
 
@@ -218,73 +205,73 @@ class _BluetoothDevicesListState extends State<BluetoothDevicesList> {
     return new LinearProgressIndicator();
   }
 
-  List<Widget> _buildServiceTiles() {
-    return _b.services
-        .map(
-          (s) => new ServiceTile(
-                service: s,
-                characteristicTiles: s.characteristics
-                    .map(
-                      (c) => new CharacteristicTile(
-                            characteristic: c,
-                            onReadPressed: () => _readCharacteristic(c),
-                            onWritePressed: () => _writeCharacteristic(c),
-                            onNotificationPressed: () => _setNotification(c),
-                            descriptorTiles: c.descriptors
-                                .map(
-                                  (d) => new DescriptorTile(
-                                        descriptor: d,
-                                        onReadPressed: () => _readDescriptor(d),
-                                        onWritePressed: () =>
-                                            _writeDescriptor(d),
-                                      ),
-                                )
-                                .toList(),
-                          ),
-                    )
-                    .toList(),
-              ),
-        )
-        .toList();
-  }
+  // List<Widget> _buildServiceTiles() {
+  //   return _b.services
+  //       .map(
+  //         (s) => new ServiceTile(
+  //               service: s,
+  //               characteristicTiles: s.characteristics
+  //                   .map(
+  //                     (c) => new CharacteristicTile(
+  //                           characteristic: c,
+  //                           onReadPressed: () => _readCharacteristic(c),
+  //                           onWritePressed: () => _writeCharacteristic(c),
+  //                           onNotificationPressed: () => _setNotification(c),
+  //                           descriptorTiles: c.descriptors
+  //                               .map(
+  //                                 (d) => new DescriptorTile(
+  //                                       descriptor: d,
+  //                                       onReadPressed: () => _readDescriptor(d),
+  //                                       onWritePressed: () =>
+  //                                           _writeDescriptor(d),
+  //                                     ),
+  //                               )
+  //                               .toList(),
+  //                         ),
+  //                   )
+  //                   .toList(),
+  //             ),
+  //       )
+  //       .toList();
+  // }
 
-  _readCharacteristic(BluetoothCharacteristic c) async {
-    await _b.readCharacteristic(c);
-    setState(() {});
-  }
+  // _readCharacteristic(BluetoothCharacteristic c) async {
+  //   await _b.readCharacteristic(c);
+  //   setState(() {});
+  // }
 
-  _writeCharacteristic(BluetoothCharacteristic c) async {
-    await _b.writeCharacteristic(c);
-    setState(() {});
-  }
+  // _writeCharacteristic(BluetoothCharacteristic c) async {
+  //   await _b.writeCharacteristic(c, 1);
+  //   setState(() {});
+  // }
 
-  _readDescriptor(BluetoothDescriptor d) async {
-    await _b.readDescriptor(d);
-    setState(() {});
-  }
+  // _readDescriptor(BluetoothDescriptor d) async {
+  //   await _b.readDescriptor(d);
+  //   setState(() {});
+  // }
 
-  _writeDescriptor(BluetoothDescriptor d) async {
-    await _b.writeDescriptor(d);
-    setState(() {});
-  }
+  // _writeDescriptor(BluetoothDescriptor d) async {
+  //   await _b.writeDescriptor(d, 1);
+  //   setState(() {});
+  // }
 
-  _setNotification(BluetoothCharacteristic c) async {
-    if (c.isNotifying) {
-      await _b.device.setNotifyValue(c, false);
-      // Cancel subscription
-      _b.valueChangedSubscriptions[c.uuid]?.cancel();
-      _b.valueChangedSubscriptions.remove(c.uuid);
-    } else {
-      await _b.device.setNotifyValue(c, true);
-      // ignore: cancel_subscriptions
-      final sub = _b.device.onValueChanged(c).listen((d) {
-        setState(() {
-          print('onValueChanged $d');
-        });
-      });
-      // Add to map
-      _b.valueChangedSubscriptions[c.uuid] = sub;
-    }
-    setState(() {});
-  }
+  // _setNotification(BluetoothCharacteristic c) async {
+  //   if (c.isNotifying) {
+  //     await _b.device.setNotifyValue(c, false);
+  //     // Cancel subscription
+  //     _b.valueChangedSubscriptions[c.uuid]?.cancel();
+  //     _b.valueChangedSubscriptions.remove(c.uuid);
+  //   } else {
+  //     await _b.device.setNotifyValue(c, true);
+  //     // ignore: cancel_subscriptions
+  //     final sub = _b.device.onValueChanged(c).listen((d) {
+  //       setState(() {
+  //         print('onValueChanged $d');
+  //       });
+  //     });
+  //     // Add to map
+  //     _b.valueChangedSubscriptions[c.uuid] = sub;
+  //   }
+  //   setState(() {});
+  // }
 }
