@@ -37,10 +37,10 @@ class HomeTabs extends StatelessWidget {
             LongRestPage(),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.bluetooth),
-          onPressed: () => floatingButtonPressed(context),
-        ),
+//        floatingActionButton: FloatingActionButton(
+//          child: Icon(Icons.bluetooth),
+//          onPressed: () => floatingButtonPressed(context),
+//        ),
       ),
     );
   }

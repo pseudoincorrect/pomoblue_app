@@ -62,7 +62,7 @@ class _HomeTimerState extends State<HomeTimer> {
               running: widget.imagesAssets.running,
             ),
           ),
-          DeviceInfo(),
+//          DeviceInfo(),
         ],
       ),
     );
